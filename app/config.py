@@ -2,20 +2,29 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_HOST: str
-    DB_NAME: str
-    DB_PORT: int
-    JWT_KEY: str
+    '''Переменные окружения'''
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_HOST: str
+    POSTGRES_DB: str
+    POSTGRES_PORT: int
+
+    REDIS_HOST: str
+    REDIS_PORT: str
+
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     @property
-    def DATABASE_URL(self):
-        return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
+    def DATABASE_URL(self) -> str:
+        '''Получение строки подключения к Postgres'''
+        return f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}'
 
     @property
-    def JWT_SECRET(self):
-        return self.JWT_KEY
+    def REDIS_URL(self) -> str:
+        '''Получение строки подключения к Redis'''
+        return f'redis://{self.REDIS_HOST}:{self.REDIS_PORT}'
 
     model_config = SettingsConfigDict(env_file='.env')
 

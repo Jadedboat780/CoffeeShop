@@ -12,5 +12,6 @@ class Base(DeclarativeBase):
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    '''Получение сессии'''
     async with async_session_maker() as session:
         yield session
