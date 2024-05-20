@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -7,11 +8,11 @@ from redis import asyncio as aioredis
 from app.products.router import router as product_router
 from app.users.router import router as user_router
 from app.tasks.product_sale import router as task_router
-from app.auth.auth import router as auth_router
+from app.auth import router as auth_router
 from app.file import router as file_router
 from app.config import settings
 
-app = FastAPI(title="Project", docs_url="/documentation")
+app = FastAPI(title="Project", docs_url="/documentation", default_response_class=ORJSONResponse)
 
 # список источников, на которые разрешено выполнять кросс-доменные запросы
 origins = [
