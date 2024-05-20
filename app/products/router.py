@@ -7,7 +7,7 @@ from annotated_types import Ge
 
 from app.db.database import get_async_session
 from app.db.models import ProductOrm
-from app.auth.jwt import get_user_from_token
+from app.auth import get_user_from_token
 from app.file import is_file_exist
 from .schemas import CreateProduct, GetProduct, UpdateProduct, UpdateProductPartial
 

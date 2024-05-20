@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi import BackgroundTasks, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,9 +7,8 @@ from annotated_types import Ge, Le
 
 from app.db.database import get_async_session
 from app.db.models import ProductOrm
-from app.auth.jwt import get_user_from_token
-
-router = APIRouter(prefix='/tasks', tags=['Tasks'])
+from app.auth import get_user_from_token
+from app.tasks import router
 
 
 async def set_sale(percent: int, session: AsyncSession):

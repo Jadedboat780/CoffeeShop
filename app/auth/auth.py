@@ -1,20 +1,18 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi_cache.decorator import cache
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
 from app.db.database import get_async_session
 from app.db.models import UserOrm
-from .shemas import TokenInfo
+from .schemas import TokenInfo
 from .jwt import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login")
-@cache(60*30)
 async def login(
         user: Annotated[OAuth2PasswordRequestForm, Depends()],
         session: AsyncSession = Depends(get_async_session),
