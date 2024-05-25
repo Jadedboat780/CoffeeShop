@@ -11,6 +11,7 @@ class ProductOrm(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(40))
     price: Mapped[float]
+    category: Mapped[str]
     description: Mapped[str | None] = mapped_column(String(150))
     image_url: Mapped[str] = mapped_column(String(150))
 
