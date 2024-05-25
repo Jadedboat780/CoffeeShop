@@ -29,7 +29,6 @@ async def is_user_exist(
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(
         new_user: CreateUser,
-        _authenticated=Depends(get_user_from_token),
         session: AsyncSession = Depends(get_async_session)
 ):
     '''Создание пользователя'''
