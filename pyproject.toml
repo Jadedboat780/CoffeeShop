@@ -19,6 +19,7 @@ gunicorn = "^22.0.0"
 fastapi-cache2 = {extras = ["redis"], version = "^0.2.1"}
 aiofiles = "^23.2.1"
 pyjwt = "^2.8.0"
+slowapi = "^0.1.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2"
