@@ -1,9 +1,9 @@
-import sqlalchemy
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 import uuid
 
-from .schemas import CreateUser, GetUser, UpdateUserPartial
+from app.users.schemas import CreateUser, GetUser, UpdateUserPartial
 from app.db.models import UserOrm
 from app.utils import hash_password, check_password
 
@@ -30,7 +30,7 @@ async def create(new_user: CreateUser, session: AsyncSession) -> bool:
         session.add(query)
         await session.commit()
         return True
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         return False
 
 
