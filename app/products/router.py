@@ -1,148 +1,95 @@
 from fastapi import APIRouter, Path, Depends, status, HTTPException
-from fastapi_cache.decorator import cache
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
-from annotated_types import Ge, MinLen
 
+from app.products.schemas import GetProduct, CreateProduct, UpdateProduct, UpdateProductPartial
+import app.products.crud as product_crud
 from app.db.database import get_async_session
-from app.db.models import ProductOrm
+from app.utils import Paginator
 from app.auth import get_user_from_token
-from app.file import is_file_exist
-from .schemas import CreateProduct, GetProduct, UpdateProduct, UpdateProductPartial
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=list[GetProduct])
-async def get_products(
-        limit: Annotated[int, Ge(1)] = 100,
-        offset: Annotated[int, Ge(0)] = 0,
-        _authenticated = Depends(get_user_from_token),
-        session: AsyncSession = Depends(get_async_session)
-):
-    '''Получение всех товаров'''
-    query = select(ProductOrm).order_by(ProductOrm.id).limit(limit).offset(offset)
-    result = await session.execute(query)
-    return result.scalars().all()
-
-
-@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=GetProduct)
-@cache(60 * 60)
+@router.get("/{id}", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=GetProduct, summary='Получить продукт')
 async def get_product(
         id: Annotated[int, Path(ge=1)],
-        _authenticated = Depends(get_user_from_token),
         session: AsyncSession = Depends(get_async_session)
 ):
-    '''Получение товара'''
-    result = await session.get(ProductOrm, id)
+    result = await product_crud.get_by_id(id, session)
     if result is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {id} not found!")
+
     return result
 
 
-@router.get("/category/", status_code=status.HTTP_200_OK)
-# @cache(60 * 60)
+@router.get("/", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=list[GetProduct], summary='Получить продукты')
+async def get_products(
+        pagination: Paginator = Depends(),
+        session: AsyncSession = Depends(get_async_session)
+):
+    data = await product_crud.get_partial(pagination, session)
+    return data
+
+
+@router.get("/category/", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=list[GetProduct],
+            summary='Получить продукты по категории')
 async def get_products_by_category(
         category: str,
-        limit: Annotated[int, Ge(1)] = 100,
-        offset: Annotated[int, Ge(0)] = 0,
-        _authenticated = Depends(get_user_from_token),
+        pagination: Paginator = Depends(),
         session: AsyncSession = Depends(get_async_session)
 ):
-    query = select(ProductOrm).where(category == ProductOrm.category).order_by(ProductOrm.id).limit(limit).offset(offset)
-    result = await session.execute(query)
-    result = result.scalars().all()
-    if len(result) == 0:
+    data = await product_crud.get_by_category(category, pagination, session)
+    if len(data) == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Category {category} not found!")
 
-    return result
+    return data
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Создать продукт')
 async def create_product(
         new_product: CreateProduct,
-        _authenticated = Depends(get_user_from_token),
         session: AsyncSession = Depends(get_async_session)
 ):
-    '''Создание товара'''
-    is_exist = await is_file_exist(new_product.image_url)
-    if is_exist is False:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You didn't add a photo")
-
-    query = ProductOrm(**new_product.model_dump())
-    session.add(query)
-    await session.commit()
+    await product_crud.create(new_product, session)
     return {"status": "success"}
 
 
-@router.put("/{id}", status_code=status.HTTP_201_CREATED)
+@router.put("/{id}", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Обновить информацию о продукте')
 async def update_product(
         id: Annotated[int, Path(ge=1)],
-        update_product: UpdateProduct,
-        _authenticated = Depends(get_user_from_token),
+        update_data: UpdateProduct,
         session: AsyncSession = Depends(get_async_session)
 ):
-    '''Полное обновление информации о товаре'''
-    product = await session.get(ProductOrm, id)
+    product = await product_crud.get_by_id(id, session)
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {id} not found!")
 
-    is_exist = await is_file_exist(update_product.image_url)
-    if is_exist is False:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You didn't add a photo")
-
-    product.title = update_product.title
-    product.price = update_product.price
-    product.category = update_product.category
-    product.description = update_product.description
-    product.image_url = update_product.image_url
-
-    await session.commit()
+    await product_crud.update(product, update_data, session)
     return {"status": "success"}
 
 
-@router.patch("/{id}", status_code=status.HTTP_201_CREATED)
+@router.patch("/{id}", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Обновить часть информации о продукте')
 async def update_product_partial(
         id: Annotated[int, Path(ge=1)],
-        update_product: UpdateProductPartial,
-        _authenticated = Depends(get_user_from_token),
+        update_data: UpdateProductPartial,
         session: AsyncSession = Depends(get_async_session)
 ):
-    '''Частичное обновление информации о товаре'''
-    product = await session.get(ProductOrm, id)
+    product = await product_crud.get_by_id(id, session)
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {id} not found!")
 
-    if update_product.title:
-        product.title = update_product.title
-
-    if update_product.price:
-        product.price = update_product.price
-
-    if update_product.description:
-        product.description = update_product.description
-
-    if update_product.image_url:
-        is_exist = await is_file_exist(update_product.image_url)
-        if is_exist is False:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You didn't add a photo")
-        product.image_url = update_product.image_url
-
-    await session.commit()
+    await product_crud.update_partial(product, update_data, session)
     return {"status": "success"}
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(get_user_from_token)], summary='Удалить продукт')
 async def delete_product(
         id: Annotated[int, Path(ge=1)],
-        _authenticated = Depends(get_user_from_token),
         session: AsyncSession = Depends(get_async_session)
 ):
-    '''Удаление товара'''
-    product = await session.get(ProductOrm, id)
+    product = await product_crud.get_by_id(id, session)
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {id} not found!")
 
-    await session.delete(product)
-    await session.commit()
+    await product_crud.delete(product, session)
