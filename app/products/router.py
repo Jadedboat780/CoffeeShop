@@ -8,10 +8,10 @@ from app.db.database import get_async_session
 from app.utils import Paginator
 from app.auth import get_user_from_token
 
-router = APIRouter(prefix="/products", tags=["Products"])
+router = APIRouter(prefix="/products", tags=["Products"], dependencies=[Depends(get_user_from_token)])
 
 
-@router.get("/{id}", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=GetProduct, summary='Получить продукт')
+@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=GetProduct, summary='Получить продукт')
 async def get_product(
         id: Annotated[int, Path(ge=1)],
         session: AsyncSession = Depends(get_async_session)
@@ -23,7 +23,7 @@ async def get_product(
     return result
 
 
-@router.get("/", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=list[GetProduct], summary='Получить продукты')
+@router.get("/", status_code=status.HTTP_200_OK, response_model=list[GetProduct], summary='Получить продукты')
 async def get_products(
         pagination: Paginator = Depends(),
         session: AsyncSession = Depends(get_async_session)
@@ -32,7 +32,7 @@ async def get_products(
     return data
 
 
-@router.get("/category/", status_code=status.HTTP_200_OK, dependencies=[Depends(get_user_from_token)], response_model=list[GetProduct],
+@router.get("/category/", status_code=status.HTTP_200_OK, response_model=list[GetProduct],
             summary='Получить продукты по категории')
 async def get_products_by_category(
         category: str,
@@ -46,7 +46,7 @@ async def get_products_by_category(
     return data
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Создать продукт')
+@router.post("/", status_code=status.HTTP_201_CREATED, summary='Создать продукт')
 async def create_product(
         new_product: CreateProduct,
         session: AsyncSession = Depends(get_async_session)
@@ -55,7 +55,7 @@ async def create_product(
     return {"status": "success"}
 
 
-@router.put("/{id}", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Обновить информацию о продукте')
+@router.put("/{id}", status_code=status.HTTP_201_CREATED, summary='Обновить информацию о продукте')
 async def update_product(
         id: Annotated[int, Path(ge=1)],
         update_data: UpdateProduct,
@@ -69,7 +69,7 @@ async def update_product(
     return {"status": "success"}
 
 
-@router.patch("/{id}", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_user_from_token)], summary='Обновить часть информации о продукте')
+@router.patch("/{id}", status_code=status.HTTP_201_CREATED, summary='Обновить часть информации о продукте')
 async def update_product_partial(
         id: Annotated[int, Path(ge=1)],
         update_data: UpdateProductPartial,
@@ -83,7 +83,7 @@ async def update_product_partial(
     return {"status": "success"}
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(get_user_from_token)], summary='Удалить продукт')
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary='Удалить продукт')
 async def delete_product(
         id: Annotated[int, Path(ge=1)],
         session: AsyncSession = Depends(get_async_session)

@@ -1,9 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-import uuid
 
-from app.users.schemas import CreateUser, GetUser, UpdateUserPartial
+from app.users.schemas import GetUser, CreateUser, UpdateUserPartial
 from app.db.models import UserOrm
 from app.utils import hash_password, check_password
 
@@ -54,8 +53,7 @@ async def update_partial(user: UserOrm, update_data: UpdateUserPartial, session:
     await session.commit()
 
 
-async def delete(id: uuid.UUID, session: AsyncSession) -> None:
+async def delete(user: UserOrm, session: AsyncSession) -> None:
     """Удаление юзера"""
-    user = await session.get(UserOrm, id)
     await session.delete(user)
     await session.commit()
