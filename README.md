@@ -1,25 +1,22 @@
-# Бэкенд для магазина продуктов (находится в разработке)
-Стек: fastapi, pydantic, sqlalchemy(psycopg2), alembic, fastapi-cache2(redis), poetry
+# Бэкенд для магазина продуктов 
+Стек: fastapi, pydantic, sqlalchemy(psycopg2-binary, asyncpg), alembic, sqladmin, aiobotocore, poetry
 
-## Структура проекта
-* app - корневая папка бекенда
-  * auth - реализацию аунтификации
-  * db - содержит описание таблиц и производит подключение к базе данных
-  * products - реализация эндпоинтов для товаров
-  * tasks - фоновые задачи
-  * users - реализация эндпоинтов для пользователя
-  * config.py - конфигурационные переменные проекта
-  * file.py - функции для работы с файлами
-* files - папка для хранения файлов (в основном фотографий)
-* migrations - папка с описанием миграций
-* tests - папка с тестами
-* .env - файл с переменными окружения
-* main.py - сборка эндпоинтов и запуск бекенда
-* pyproject.toml - файл с описанем зависимостей проекта
+## Для запуска необходимо выполнить
+```shell
+python3 -m venv venv
+source venv/bin/activate
+pip install poetry
+poetry install
+alembic upgrade head
+python3 -m uvicorn app.main:app --reload
+```
 
-## Что ещё необходимо реализовать
-1. [x] Работу с jwt access токеном
-2. [ ] Работу jwt refresh токеном
-3. [ ] Api rate limiting
-4. [ ] Работу с Elasticsearch
-5. [ ] Добавить тесты
+### Документация
+```
+http://127.0.0.1:8000/documentation
+```
+
+### Админка
+```
+http://127.0.0.1:8000/admin/
+```
