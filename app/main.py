@@ -14,6 +14,7 @@ from app.products import router as product_router
 from app.storage import router as storage_router
 from app.tasks.product_sale import router as task_router
 from app.auth import router as auth_router
+from app.admin import create_admin, UserAdmin, ProductAdmin
 
 
 @asynccontextmanager
@@ -51,6 +52,10 @@ app.add_middleware(SlowAPIMiddleware)
 # подключение роутеров
 for router in (user_router, product_router, storage_router, auth_router, task_router):
     app.include_router(router)
+
+admin = create_admin(app)
+for view in (UserAdmin, ProductAdmin):
+    admin.add_view(view)
 
 
 @app.get("/", tags=["Hello word"], name="hello-world")
