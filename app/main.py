@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi_profiler import PyInstrumentProfilerMiddleware
+
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
@@ -26,6 +28,9 @@ app = FastAPI(title="Product Shop",
               docs_url="/documentation",
               default_response_class=ORJSONResponse,
               lifespan=lifespan)
+
+# профилировщик запросов
+app.add_middleware(PyInstrumentProfilerMiddleware)
 
 # список источников, на которые разрешено выполнять кросс-доменные запросы
 origins = [
