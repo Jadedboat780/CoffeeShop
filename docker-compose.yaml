@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:17-alpine
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  db-data:
+    driver: local
