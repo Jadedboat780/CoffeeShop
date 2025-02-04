@@ -13,9 +13,7 @@ dependencies = [
     "fastapi[standard]>=0.115.8",
     "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.7.1",
-    "pydantic[email]>=2.10.6",
     "pyjwt>=2.10.1",
     "sqladmin>=0.20.1",
-    "sqlalchemy[asyncio]>=2.0.37",
     "sqlmodel>=0.0.22"
 ]
