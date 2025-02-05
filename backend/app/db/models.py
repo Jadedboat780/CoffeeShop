@@ -10,11 +10,11 @@ class User(SQLModel, table=True):
     __tablename__ = "users"
 
     id: UUID = Field(primary_key=True, default=uuid4)
-    name: str = Field(min_length=25)
-    surname: str = Field(min_length=25)
-    email: EmailStr = Field(min_length=80, unique=True)
+    name: str = Field(max_length=25)
+    surname: str = Field(max_length=25)
+    email: EmailStr = Field(max_length=80, unique=True)
     password: bytes
-    image_url: str | None = Field(min_length=50)
+    image_url: str | None = Field(max_length=100)
 
 
 class Category(StrEnum):
