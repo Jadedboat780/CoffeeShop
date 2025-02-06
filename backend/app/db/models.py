@@ -1,20 +1,21 @@
-from sqlmodel import SQLModel, Field
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
+import uuid
 from pydantic import EmailStr
-from uuid import UUID, uuid4
 from enum import StrEnum, auto
+from .database import Base
 
 
-class User(SQLModel, table=True):
+class UserOrm(Base):
     """Users table"""
+    __tablename__ = 'users'
 
-    __tablename__ = "users"
-
-    id: UUID = Field(primary_key=True, default=uuid4)
-    name: str = Field(max_length=25)
-    surname: str = Field(max_length=25)
-    email: EmailStr = Field(max_length=80, unique=True)
-    password: bytes
-    image_url: str | None = Field(max_length=100)
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String(25))
+    surname: Mapped[str] = mapped_column(String(25))
+    email: Mapped[EmailStr] = mapped_column(String(50), unique=True)
+    password: Mapped[bytes]
+    image_url: Mapped[str | None] = mapped_column(String(150))
 
 
 class Category(StrEnum):
@@ -30,15 +31,14 @@ class CoffeSize(StrEnum):
     L = auto()
 
 
-class Coffee(SQLModel, table=True):
+class CoffeeOrm(Base):
     """Coffee table"""
-
     __tablename__ = "coffees"
 
-    id: int = Field(primary_key=True)
-    title: str = Field(min_length=20)
-    description: str = Field(min_length=100)
-    price: float = Field(min_length=50)
-    category: Category
-    size: CoffeSize
-    image_url: str | None = Field(min_length=50)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(20))
+    description: Mapped[str] = mapped_column(String(100))
+    price: Mapped[float]
+    category: Mapped[Category]
+    size: Mapped[CoffeSize]
+    image_url: Mapped[str | None] = mapped_column(String(50))

@@ -1,10 +1,10 @@
 from fastapi import Depends
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import Annotated
 
 from .database import get_session
-from .models import User, Coffee
+from .models import UserOrm, CoffeeOrm
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
-__all__ = (User, Coffee, SessionDep)
+__all__ = (UserOrm, CoffeeOrm, SessionDep)
