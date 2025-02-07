@@ -1,56 +1,69 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
+from .schemas import GetUser, UserData, CreateUser, UpdateUserPartial
+from .crud import UserDAO
 
-from endpoints.users.schemas import CreateUser, GetUser, UpdateUserPartial
-import endpoints.users.crud as user_crud
-from db.database import get_async_session
-from endpoints.auth import get_user_from_token
-
-router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(get_user_from_token)])
+# dependencies=[Depends(get_user_from_token)])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.post("/search", status_code=status.HTTP_204_NO_CONTENT)
-async def is_user_exist(
-        user: GetUser,
-        session: AsyncSession = Depends(get_async_session)
-):
-    data = await user_crud.get(user, session)
-    if data is None:
+@router.get("/search/{user_id}", status_code=status.HTTP_200_OK)
+async def get_user_by_email(
+        user_id: uuid.UUID,
+        user_dao: UserDAO = Depends()
+) -> UserData:
+    user = await user_dao.get_by_id(user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User not found")
+
+    return UserData(**user.__dict__)
+
+
+@router.post("/search", status_code=status.HTTP_200_OK)
+async def get_user_by_email(
+        user_data: GetUser,
+        user_dao: UserDAO = Depends()
+) -> UserData:
+    user = await user_dao.get_by_email(user=user_data)
+    if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Incorrect email or password")
+
+    return UserData(**user.__dict__)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(
-        new_user: CreateUser,
-        session: AsyncSession = Depends(get_async_session)
-):
-    result = await user_crud.create(new_user, session)
-    if result is False:
+        user_data: CreateUser,
+        user_dao: UserDAO = Depends()
+) -> UserData:
+    user = await user_dao.create(new_user=user_data)
+    if user is None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"User is already exist")
-    return {"status": "success"}
+
+    return UserData(**user.__dict__)
 
 
-@router.patch("/", status_code=status.HTTP_201_CREATED)
+@router.patch("/{user_id}", status_code=status.HTTP_201_CREATED)
 async def update_user_partial(
-        user: GetUser,
+        user_id: uuid.UUID,
         update_data: UpdateUserPartial,
-        session: AsyncSession = Depends(get_async_session)
-):
-    user = await user_crud.get(user, session)
+        user_dao: UserDAO = Depends()
+) -> UserData:
+    user = await user_dao.get_by_id(user_id=user_id)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Incorrect email or password")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User not found")
 
-    await user_crud.update_partial(user, update_data, session)
-    return {"status": "success"}
+    updated_data = await user_dao.update_partial(user=user, update_data=update_data)
+    return UserData(**updated_data.__dict__)
 
 
-@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
-        user: GetUser,
-        session: AsyncSession = Depends(get_async_session)
+        user_id: uuid.UUID,
+        user_dao: UserDAO = Depends()
 ):
-    user = await user_crud.get(user, session)
+    user = await user_dao.get_by_id(user_id=user_id)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User not found")
 
-    await user_crud.delete(user, session)
+    await user_dao.delete(user=user)

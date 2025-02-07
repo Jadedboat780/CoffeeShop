@@ -1,3 +1,3 @@
-from endpoints.users.router import router
+from .router import router
 
-__all__ = ("router",)
+__all__ = (router,)

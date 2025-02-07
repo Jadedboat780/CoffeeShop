@@ -1,59 +1,70 @@
+import uuid
+
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
-from endpoints.users.schemas import GetUser, CreateUser, UpdateUserPartial
-from db.models import UserOrm
-from utils import hash_password, check_password
+from app.db import UserOrm, SessionDep
+from .schemas import GetUser, CreateUser, UpdateUserPartial
+from .utils import hash_password, check_password
 
 
-async def get(entered_user: GetUser, session: AsyncSession) -> UserOrm | None:
-    """Поиск юзера"""
-    query = select(UserOrm).where(entered_user.email == UserOrm.email)
-    query_result = await session.execute(query)
-    data = query_result.scalars().one_or_none()
-    if data is None:
-        return None
+class UserDAO:
+    """Class for accessing Users table"""
 
-    if not check_password(entered_user.password, data.password):
-        return None
+    def __init__(self, db_session: SessionDep):
+        self.session = db_session
 
-    return data
+    async def get_by_id(self, *, user_id: uuid.UUID) -> UserOrm | None:
+        user = await self.session.get(UserOrm, user_id)
+        return user
 
+    async def get_by_email(self, *, user: GetUser) -> UserOrm | None:
+        """Search user by email"""
+        query = select(UserOrm).where(UserOrm.email == user.email)
+        query_result = await self.session.execute(query)
+        data = query_result.scalars().one_or_none()
+        if data is None:
+            return None
 
-async def create(new_user: CreateUser, session: AsyncSession) -> bool:
-    """Создание нового юзера"""
-    new_user.password = hash_password(new_user.password)
-    query = UserOrm(**new_user.model_dump())
-    try:
-        session.add(query)
-        await session.commit()
-        return True
-    except IntegrityError:
-        return False
+        if not check_password(user.password, data.password):
+            return None
 
+        return data
 
-async def update_partial(user: UserOrm, update_data: UpdateUserPartial, session: AsyncSession) -> None:
-    """Обновление данных о юзере"""
-    if update_data.name:
-        user.name = update_data.name
+    async def create(self, *, new_user: CreateUser) -> UserOrm | None:
+        """Create new user"""
+        new_user.password = hash_password(new_user.password)
+        user = UserOrm(**new_user.model_dump())
+        try:
+            self.session.add(user)
+            await self.session.commit()
+            await self.session.refresh(user)
+            return user
+        except IntegrityError:
+            return None
 
-    if update_data.surname:
-        user.surname = update_data.surname
+    async def update_partial(self, *, user: UserOrm, update_data: UpdateUserPartial) -> UserOrm:
+        """Update partial fields"""
+        if update_data.new_name:
+            user.name = update_data.new_name
 
-    if update_data.email:
-        user.email = update_data.email
+        if update_data.new_surname:
+            user.surname = update_data.new_surname
 
-    if update_data.password:
-        user.password = hash_password(update_data.password)
+        if update_data.new_email:
+            user.email = update_data.new_email
 
-    if update_data.image_url:
-        user.image_url = update_data.image_url
+        if update_data.new_password:
+            user.password = hash_password(update_data.new_password)
 
-    await session.commit()
+        if update_data.new_image_url:
+            user.image_url = update_data.new_image_url
 
+        await self.session.commit()
+        await self.session.refresh(user)
+        return user
 
-async def delete(user: UserOrm, session: AsyncSession) -> None:
-    """Удаление юзера"""
-    await session.delete(user)
-    await session.commit()
+    async def delete(self, *, user: UserOrm) -> None:
+        """Delete user"""
+        await self.session.delete(user)
+        await self.session.commit()
