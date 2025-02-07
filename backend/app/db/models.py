@@ -1,5 +1,5 @@
-from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 import uuid
 from pydantic import EmailStr
 from enum import StrEnum, auto
@@ -18,14 +18,14 @@ class UserOrm(Base):
     image_url: Mapped[str | None] = mapped_column(String(150))
 
 
-class Category(StrEnum):
+class CoffeeCategory(StrEnum):
     cappuccino = auto()
     latte = auto()
     macchiato = auto()
     americano = auto()
 
 
-class CoffeSize(StrEnum):
+class CoffeeSize(StrEnum):
     S = auto()
     M = auto()
     L = auto()
@@ -39,6 +39,6 @@ class CoffeeOrm(Base):
     title: Mapped[str] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(String(100))
     price: Mapped[float]
-    category: Mapped[Category]
-    size: Mapped[CoffeSize]
+    category: Mapped[CoffeeCategory]
+    size: Mapped[CoffeeSize]
     image_url: Mapped[str | None] = mapped_column(String(50))
