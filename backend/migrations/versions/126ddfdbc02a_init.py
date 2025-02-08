@@ -1,8 +1,8 @@
 """init
 
-Revision ID: b8c8f673e019
+Revision ID: 126ddfdbc02a
 Revises: 
-Create Date: 2025-02-06 13:39:04.052059
+Create Date: 2025-02-08 13:35:40.437383
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'b8c8f673e019'
+revision: str = '126ddfdbc02a'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,8 +25,8 @@ def upgrade() -> None:
     sa.Column('title', sa.String(length=20), nullable=False),
     sa.Column('description', sa.String(length=100), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
-    sa.Column('category', sa.Enum('cappuccino', 'latte', 'macchiato', 'americano', name='category'), nullable=False),
-    sa.Column('size', sa.Enum('S', 'M', 'L', name='coffesize'), nullable=False),
+    sa.Column('category', sa.Enum('cappuccino', 'latte', 'macchiato', 'americano', name='coffeecategory'), nullable=False),
+    sa.Column('size', sa.Enum('S', 'M', 'L', name='coffeesize'), nullable=False),
     sa.Column('image_url', sa.String(length=50), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )

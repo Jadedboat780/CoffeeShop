@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import String, Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column
 import uuid
 from pydantic import EmailStr
@@ -39,6 +39,6 @@ class CoffeeOrm(Base):
     title: Mapped[str] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(String(100))
     price: Mapped[float]
-    category: Mapped[CoffeeCategory]
-    size: Mapped[CoffeeSize]
+    category: Mapped[CoffeeCategory] = mapped_column(SqlEnum(CoffeeCategory))
+    size: Mapped[CoffeeSize] = mapped_column(SqlEnum(CoffeeSize))
     image_url: Mapped[str | None] = mapped_column(String(50))
