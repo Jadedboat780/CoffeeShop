@@ -19,7 +19,7 @@ class Config(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        '''Получение строки подключения к Postgres'''
+        """Url for connecting to database"""
         return (f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
                 f'@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}')
 
@@ -27,4 +27,3 @@ class Config(BaseSettings):
 
 
 config = Config()
-

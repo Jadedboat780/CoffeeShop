@@ -192,6 +192,7 @@ dependencies = [
     { name = "pyjwt" },
     { name = "sqladmin" },
     { name = "sqlalchemy", extra = ["asyncio"] },
+    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.metadata]
@@ -207,6 +208,7 @@ requires-dist = [
     { name = "pyjwt", specifier = ">=2.10.1" },
     { name = "sqladmin", specifier = ">=0.20.1" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.37" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]
 
 [[package]]
