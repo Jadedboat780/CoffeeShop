@@ -190,7 +190,6 @@ dependencies = [
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
     { name = "pyjwt" },
-    { name = "sqladmin" },
     { name = "sqlalchemy", extra = ["asyncio"] },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -206,7 +205,6 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pydantic-settings", specifier = ">=2.7.1" },
     { name = "pyjwt", specifier = ">=2.10.1" },
-    { name = "sqladmin", specifier = ">=0.20.1" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.37" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]
@@ -888,22 +886,6 @@ wheels = [
 ]
 
 [[package]]
-name = "sqladmin"
-version = "0.20.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "jinja2" },
-    { name = "python-multipart" },
-    { name = "sqlalchemy" },
-    { name = "starlette" },
-    { name = "wtforms" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/fe/04/fae8ffd11e2b370495f7f5e21cfaf4c7fc41cfc8a4d430474d72a9fd213d/sqladmin-0.20.1.tar.gz", hash = "sha256:b6cc6df648a8a05f7baa57cd5fc236cf0729d0bb27b0a33ced150e956fa68437", size = 1426270 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/be/f0bc5a1e0b6aeeff7f44b30db8649d1af0261e81615278e7c495d40db107/sqladmin-0.20.1-py3-none-any.whl", hash = "sha256:82310bb5b4cc2563494e42a03ef0b269030d78f6df4f6a331837f0f124d10dae", size = 1441133 },
-]
-
-[[package]]
 name = "sqlalchemy"
 version = "2.0.37"
 source = { registry = "https://pypi.org/simple" }
@@ -1133,18 +1115,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/e1/0122853035b40b3f333bbb25f1939fc1045e21dd518f7f0922b60c156f7c/wrapt-1.17.2-cp313-cp313t-win32.whl", hash = "sha256:13e6afb7fe71fe7485a4550a8844cc9ffbe263c0f1a1eea569bc7091d4898555", size = 37986 },
     { url = "https://files.pythonhosted.org/packages/09/5e/1655cf481e079c1f22d0cabdd4e51733679932718dc23bf2db175f329b76/wrapt-1.17.2-cp313-cp313t-win_amd64.whl", hash = "sha256:eaf675418ed6b3b31c7a989fd007fa7c3be66ce14e5c3b27336383604c9da85c", size = 40750 },
     { url = "https://files.pythonhosted.org/packages/2d/82/f56956041adef78f849db6b289b282e72b55ab8045a75abad81898c28d19/wrapt-1.17.2-py3-none-any.whl", hash = "sha256:b18f2d1533a71f069c7f82d524a52599053d4c7166e9dd374ae2136b7f40f7c8", size = 23594 },
-]
-
-[[package]]
-name = "wtforms"
-version = "3.1.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "markupsafe" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/6a/c7/96d10183c3470f1836846f7b9527d6cb0b6c2226ebca40f36fa29f23de60/wtforms-3.1.2.tar.gz", hash = "sha256:f8d76180d7239c94c6322f7990ae1216dae3659b7aa1cee94b6318bdffb474b9", size = 134705 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/18/19/c3232f35e24dccfad372e9f341c4f3a1166ae7c66e4e1351a9467c921cc1/wtforms-3.1.2-py3-none-any.whl", hash = "sha256:bf831c042829c8cdbad74c27575098d541d039b1faa74c771545ecac916f2c07", size = 145961 },
 ]
 
 [[package]]
