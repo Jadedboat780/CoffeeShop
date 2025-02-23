@@ -1,10 +1,10 @@
-import uuid
-
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
+from pydantic import EmailStr
+import uuid
 
 from app.db import UserOrm, SessionDep
-from .schemas import GetUser, CreateUser, UpdateUserPartial
+from .schemas import CreateUser, UpdateUserPartial
 from .utils import hash_password, check_password
 
 
@@ -18,18 +18,19 @@ class UserDAO:
         user = await self.session.get(UserOrm, user_id)
         return user
 
-    async def get_by_email(self, *, user: GetUser) -> UserOrm | None:
+    async def get_by_email(self, *, email: EmailStr | str, password: str) -> UserOrm | None:
         """Search user by email"""
-        query = select(UserOrm).where(UserOrm.email == user.email)
+        query = select(UserOrm).where(UserOrm.email == email)
         query_result = await self.session.execute(query)
-        data = query_result.scalars().one_or_none()
-        if data is None:
+        user = query_result.scalars().one_or_none()
+
+        if user is None:
             return None
 
-        if not check_password(user.password, data.password):
+        if not check_password(password, user.password):
             return None
 
-        return data
+        return user
 
     async def create(self, *, new_user: CreateUser) -> UserOrm | None:
         """Create new user"""

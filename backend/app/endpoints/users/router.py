@@ -24,7 +24,7 @@ async def get_user_by_email(
         user_data: GetUser,
         user_dao: UserDAO = Depends()
 ) -> UserData:
-    user = await user_dao.get_by_email(user=user_data)
+    user = await user_dao.get_by_email(email=user_data.email, password=user_data.password)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Incorrect email or password")
 
