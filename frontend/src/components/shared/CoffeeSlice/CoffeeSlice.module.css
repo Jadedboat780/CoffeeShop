@@ -1,0 +1,8 @@
+.slice {
+    width: 100%;
+    display: inline-flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
