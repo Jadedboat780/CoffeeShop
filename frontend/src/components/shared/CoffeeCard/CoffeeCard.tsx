@@ -1,14 +1,18 @@
+import {FC} from "react";
+import {CoffeeItem} from "@/types/coffee.ts";
 import styles from './CoffeeCard.module.css'
-import {CoffeeItem} from "@/types/coffee";
 
 
-export const CoffeeCard = ({title, description, price, image_url}: CoffeeItem) => {
+export const CoffeeCard: FC<CoffeeItem> = ({name, description, price, type, image}) => {
     return <div className={styles.card}>
-        <img className={styles.img} src={image_url} alt=""/>
+        <img src={image} alt=""/>
         <div className={styles.container}>
-            <h3 className={styles.title}>{title}</h3>
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+                <h3 className={styles.title}>{name}</h3>
+                <span className={styles.category}>{type}</span>
+            </div>
             <p className={styles.description}>{description}</p>
-            <button><p>{price} ₽</p></button>
+            <button>{price} ₽</button>
         </div>
     </div>
 }
