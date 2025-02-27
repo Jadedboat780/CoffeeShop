@@ -1,0 +1,8 @@
+:root {
+    --coffee-color: #B17457;
+    --coffee-color-dark: #7c4d36;
+}
+
+body {
+    background: var(--coffee-color);
+}
