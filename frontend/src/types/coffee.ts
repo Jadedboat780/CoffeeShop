@@ -1,12 +1,14 @@
 export type CoffeeCategory = 'cappuccino' | 'latte' | 'macchiato' | 'americano'
-export type CoffeeSize = 's' | 'm' | 'l'
 
 export type CoffeeItem = {
     id: number
-    title: string
+    name: string // title
     description: string
     price: number
-    image_url: string
+    type: CoffeeCategory // category
+    image: string
 }
 
-export type ListCoffeeItem = CoffeeItem[]
+export type CoffeeQueryParams = {
+    text?: string
+}
