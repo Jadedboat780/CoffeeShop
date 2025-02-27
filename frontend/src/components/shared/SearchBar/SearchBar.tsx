@@ -1,13 +1,14 @@
 import styles from './SearchBar.module.css'
-import {useState} from "react";
+import {useSearchStore} from "@/store";
 
 export const SearchBar = () => {
-    const [searchInput, setSearchInput] = useState("");
+    const {text, setText} = useSearchStore();
 
-    return <div className={styles.search_bar}>
+    return <div className={styles.search_bar} role="search">
         <input type="text"
-               value={searchInput}
-               onChange={(e) => setSearchInput(e.target.value)}
-               placeholder="What are you looking for?"/>
+               value={text}
+               placeholder="Search for coffee..."
+               onChange={(e) => setText(e.target.value)}
+        />
     </div>
 }
