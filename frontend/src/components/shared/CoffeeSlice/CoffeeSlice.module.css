@@ -4,5 +4,10 @@
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 25px 50px;
+}
+
+.slice span {
+    font-size: 3rem;
+    color: white;
 }
