@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.endpoints import endpoints_routers
+from app.api.v1 import api_routers
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -30,7 +30,7 @@ app.add_middleware(
 )
 
 # connecting routers
-for router in endpoints_routers:
+for router in api_routers:
     app.include_router(router)
 
 

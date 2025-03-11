@@ -2,7 +2,7 @@ from fastapi import APIRouter, Path, Depends, status, HTTPException
 from typing import Annotated
 
 from app.db.models import CoffeeCategory
-from app.endpoints.pagination import Paginator
+from app.api.v1.pagination import Paginator
 from .crud import CoffeeDAO
 from .schemas import GetCoffee, CreateCoffee, UpdateCoffee, UpdateCoffeePartial
 

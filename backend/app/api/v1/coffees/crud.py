@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.db import CoffeeOrm, SessionDep
 from app.db.models import CoffeeCategory
-from app.endpoints.pagination import Paginator
+from app.api.v1.pagination import Paginator
 from .schemas import CreateCoffee, UpdateCoffee, UpdateCoffeePartial
 
 

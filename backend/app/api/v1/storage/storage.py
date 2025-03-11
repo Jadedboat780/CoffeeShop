@@ -4,7 +4,7 @@ from fastapi import UploadFile, HTTPException, status
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from config import settings
+from app.config import config as settings
 
 
 class Storage:
