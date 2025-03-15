@@ -1,8 +1,9 @@
 from sqlalchemy import select
 
+from app.api.v1.pagination import Paginator
 from app.db import CoffeeOrm, SessionDep
 from app.db.models import CoffeeCategory
-from app.api.v1.pagination import Paginator
+
 from .schemas import CreateCoffee, UpdateCoffee, UpdateCoffeePartial
 
 
@@ -14,12 +15,7 @@ class CoffeeDAO:
 
     async def get_partial(self, *, pagination: Paginator) -> list[CoffeeOrm]:
         """Get coffees"""
-        query = (
-            select(CoffeeOrm)
-            .order_by(CoffeeOrm.id)
-            .limit(pagination.limit)
-            .offset(pagination.offset)
-        )
+        query = select(CoffeeOrm).order_by(CoffeeOrm.id).limit(pagination.limit).offset(pagination.offset)
         query_result = await self.session.execute(query)
         return query_result.scalars().all()
 

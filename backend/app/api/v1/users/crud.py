@@ -1,11 +1,13 @@
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from pydantic import EmailStr
 import uuid
 
-from app.db import UserOrm, SessionDep
+from pydantic import EmailStr
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+
+from app.db import SessionDep, UserOrm
+
 from .schemas import CreateUser, UpdateUserPartial
-from .utils import hash_password, check_password
+from .utils import check_password, hash_password
 
 
 class UserDAO:

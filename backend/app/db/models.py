@@ -1,14 +1,18 @@
-from sqlalchemy import String, Enum as SqlEnum
-from sqlalchemy.orm import Mapped, mapped_column
 import uuid
-from pydantic import EmailStr
 from enum import StrEnum, auto
+
+from pydantic import EmailStr
+from sqlalchemy import Enum as SqlEnum
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from .database import Base
 
 
 class UserOrm(Base):
     """Users table"""
-    __tablename__ = 'users'
+
+    __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(25))
@@ -33,6 +37,7 @@ class CoffeeSize(StrEnum):
 
 class CoffeeOrm(Base):
     """Coffee table"""
+
     __tablename__ = "coffees"
 
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+
 from app.db.models import CoffeeCategory, CoffeeSize
 
 
@@ -15,8 +16,7 @@ class GetCoffee(CreateCoffee):
     id: int = Field(ge=1)
 
 
-class UpdateCoffee(CreateCoffee):
-    ...
+class UpdateCoffee(CreateCoffee): ...
 
 
 class UpdateCoffeePartial(BaseModel):
