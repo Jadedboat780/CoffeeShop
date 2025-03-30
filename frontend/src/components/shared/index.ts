@@ -1,3 +1,4 @@
-export {CoffeeCard} from "@/components/shared/CoffeeCard/CoffeeCard"
-export {CoffeeSlice} from "@/components/shared/CoffeeSlice/CoffeeSlice"
-export {SearchBar} from '@/components/shared/SearchBar/SearchBar'
+export { CoffeeCard } from "./CoffeeCard/CoffeeCard";
+export { CoffeeSlice } from "./CoffeeSlice/CoffeeSlice";
+export { NotFound } from "./NotFound/NotFound";
+export { SearchBar } from "./SearchBar/SearchBar";

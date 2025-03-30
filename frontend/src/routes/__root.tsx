@@ -1,10 +1,12 @@
-import {createRootRoute, Outlet} from '@tanstack/react-router'
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { NotFound } from "@/components/shared";
 
 export const Route = createRootRoute({
-    component: () => (
-        <div>
-            <Outlet/>
-            {/*<TanStackRouterDevtools/>*/}
-        </div>
-    ),
-})
+	component: () => (
+		<>
+			<Outlet />
+			{/*<TanStackRouterDevtools/>*/}
+		</>
+	),
+	notFoundComponent: () => <NotFound text="Not Found" />,
+});
