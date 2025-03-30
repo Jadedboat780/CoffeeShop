@@ -1,11 +1,10 @@
-import {createFileRoute} from '@tanstack/react-router'
+import { Home } from "@/pages";
+import { createFileRoute } from "@tanstack/react-router";
 
-import {Home} from "@/pages";
-
-export const Route = createFileRoute('/')({
-    component: Index,
-})
+export const Route = createFileRoute("/")({
+	component: Index,
+});
 
 function Index() {
-    return <Home/>
+	return <Home />;
 }

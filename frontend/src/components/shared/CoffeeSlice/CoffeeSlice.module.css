@@ -1,13 +1,13 @@
 .slice {
-    width: 100%;
-    display: inline-flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 25px 50px;
+	width: 100%;
+	display: inline-flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 25px 50px;
 }
 
 .slice span {
-    font-size: 3rem;
-    color: white;
+	font-size: 3rem;
+	color: white;
 }

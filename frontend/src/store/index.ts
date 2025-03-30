@@ -1,2 +1,2 @@
-export {useCoffeeStore} from './coffeeStore'
-export {useSearchStore} from './searchStore'
+export { useCoffeeStore } from "./coffeeStore";
+export { useSearchStore } from "./searchStore";
