@@ -1,8 +1,10 @@
 :root {
-    --coffee-color: #B17457;
-    --coffee-color-dark: #7c4d36;
+	--coffee-color: rgb(177, 116, 87);
+	--coffee-color-dark: rgb(124, 77, 54);
+	--mint-green: rgb(91, 155, 144);
+	--mint-green-dark: rgb(77, 131, 121);
 }
 
 body {
-    background: var(--coffee-color);
+	background: var(--coffee-color);
 }
